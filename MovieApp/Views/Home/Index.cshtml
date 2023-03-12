@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Home Page";
+}
+<br />
+<h4><b><u>Home</u></b></h4>
+<div class="container">
+    <div class="row">
+
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $('body').on('click', 'img', function () {
+        var imdbID = $(this).attr('id');
+        var url = '/Home/Details?imdbID=';
+        window.location = url + imdbID;
+    });
+
+    $('#searchMovie').keypress(function (e) {
+        if (e.which == 13) {
+            var searchValue = e.target.value;
+            var url = '/Home/CallIMDBApi';
+
+            $.post(url, { searchText: searchValue },
+                function (data, status) {
+                    var result = JSON.parse(data);
+                    var record = result.Search;
+
+                    var template = '<div class="col-md-3">' +
+                        '<div class="card" style = "width:200px">' +
+                        '<img style="width:200px;height:400px;" id="imdbID" class="card-img-top" src="imgUrl" alt="Card image cap">' +
+                        '    <div class="card-body">' +
+                        '     <p class="card-text">' +
+                        'title' +
+                        '  </p>' +
+                        '  </div>' +
+                        '  </div>' +
+                        '  </div>';
+                    for (var i = 0; i < record.length; i++) {
+                        $('.row').append(template.replace('title', record[i].Title).replace('imgUrl', record[i].Poster).replace('imdbID', record[i].imdbID));
+                    }
+                });
+        }
+    });
+</script>

@@ -1,0 +1,67 @@
+﻿@model MovieApp.Models.ViewModel.DetailResponse
+@{
+    ViewBag.Title = "Details";
+}
+
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <img id="img" src="" alt="" class="img-responsive right-block" />
+        </div>
+        <div class="col-md-8">
+            <h3 id="title" class="img-responsive left-block"></h3><br />
+            <b id="plot"></b><br /><br />
+            <p><b>Year : </b><span id="year"></span></p>
+            <p><b>Genre : </b><span id="genre"></span></p>
+            <p><b>Actors : </b><span id="actors"></span></p><br />
+            <button type="button" class="btn btn-info btn-sm" id="addtofav">
+                <span class="glyphicon glyphicon-heart"></span> Add to favourites
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    var model = @Html.Raw(Json.Encode(Model));
+    $('#img').attr('src', model.Poster);
+    $('#title').html(model.Title);
+    $('#plot').html(model.Plot);
+    $('#year').html(model.Year);
+    $('#genre').html(model.Genre);
+    $('#actors').html(model.Actors);
+
+    $(document).on('click', '#addtofav', function () {
+        var url = '/Home/Favourite';
+
+        var currentUrl = window.location.href;
+        var id = currentUrl.substring(currentUrl.lastIndexOf('=') + 1);
+        debugger
+        var model = {
+            Poster: $('#img').attr('src'),
+            Plot: $('#plot').html(),
+            Title : $('#title').html(),
+            Year : $('#year').html(),
+            Genre : $('#genre').html(),
+            Actors: $('#actors').html(),
+            ImdbID : id
+        };
+        $.post(url, { model: model },
+            function (data, status) {
+                window.location = url;
+            });
+        //return false;
+    });
+
+
+
+
+
+</script>
+

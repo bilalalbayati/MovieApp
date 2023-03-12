@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Favourite";
+}
+
+<br />
+@*<a href="~/Home/Favourite">
+    <span class="glyphicon glyphicon-heart "></span> Favourites
+</a>*@
+<h4>- <a href="~/Home/Index"><b><u>Home</u></b></a> > <b><u><a href="~/Home/Favourite">Favourites</a></u></b></h4>
+<div class="container">
+    <div class="row">
+
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        GetFavouriteMovies();
+
+        $(document).on('click', '.removefav', function () {
+            var id = $(this).closest('.col-md-3').attr('id');
+
+            var url = '/Home/RemoveFromFavourites';
+
+            $.post(url, { id: id },
+                function (data, status) {
+                    debugger
+                    if (data == "True") {
+                        $('.row').html('');
+                        GetFavouriteMovies();
+                    }
+                });
+        });
+    });
+
+    function GetFavouriteMovies() {
+
+        var url = '/Home/GetFavouriteMovies';
+        var template = '<div class="col-md-3" id ="dbID">' +
+            '<div class="card" style = "width:200px">' +
+            '<img style="width:200px;height:400px;" id="imdbID" class="card-img-top" src="imgUrl" alt="Card image cap">' +
+            '    <div class="card-body">' +
+            '     <p class="card-text">' +
+            'title' +
+            '  </p>' +
+            '<button type="button" class="btn btn-danger btn-sm removefav">' +
+            '<span class="glyphicon glyphicon-heart" ></span > Remove from favourites' +
+            '</button >' +
+            '  </div>' +
+            '  </div>' +
+            '  </div>';
+
+        $.get(url, '',
+            function (data, status) {
+                var record = JSON.parse(data);
+                for (var i = 0; i < record.length; i++) {
+                    $('.row').append(template.replace('title', record[i].Title).replace('imgUrl', record[i].Poster).replace('dbID', record[i].ID));
+                }
+            });
+    }
+
+
+</script>
+
+
